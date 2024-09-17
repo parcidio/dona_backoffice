@@ -185,7 +185,7 @@ export const Header: React.FC = () => {
           <Avatar size={16} src={`/images/flags/${lang}.svg`} />
         </span>
       ),
-      label: lang === "en" ? "English" : "German",
+      label: lang === "en" ? "English" : "Portuguese",
     }));
 
   return (
@@ -231,7 +231,7 @@ export const Header: React.FC = () => {
               <Button onClick={(e) => e.preventDefault()}>
                 <Space>
                   <Text className={styles.languageSwitchText}>
-                    {currentLocale === "en" ? "English" : "German"}
+                    {currentLocale === "en" ? "English" : "Portuguese"}
                   </Text>
                   {/* @ts-expect-error Ant Design Icon's v5.0.1 has an issue with @types/react@^18.2.66 */}
                   <DownOutlined className={styles.languageSwitchIcon} />

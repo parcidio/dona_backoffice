@@ -1,5 +1,5 @@
 import React from "react";
-import { Authenticated, Refine } from "@refinedev/core";
+import { Authenticated, AuditLogProvider, Refine, BaseKey, LogParams } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
 import {
   useNotificationProvider,
@@ -24,7 +24,7 @@ import {
 import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
 
-import "dayjs/locale/de";
+import "dayjs/locale/pt";
 
 import { DashboardPage } from "./pages/dashboard";
 import { OrderList, OrderShow } from "./pages/orders";
@@ -47,6 +47,7 @@ import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
 
+
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
   // We use this hook to skip the login page and demonstrate the application more quickly.
@@ -67,6 +68,31 @@ const App: React.FC = () => {
     return null;
   }
 
+// LOGS
+  const auditLogProvider: AuditLogProvider = {
+    get: async (params) => {
+      const { resource, meta, action, author, metaData } = params;
+  
+      const response = await fetch(
+        `https://example.com/api/audit-logs/${resource}/${meta?.id}`,
+        {
+          method: "GET",
+        }
+      );
+  
+      const data = await response.json();
+  
+      return data;
+    },
+    create: function (params: LogParams): Promise<any> {
+      throw new Error("Function not implemented.");
+    },
+    update: function (params: { id: BaseKey; name: string;[key: string]: any; }): Promise<any> {
+      throw new Error("Function not implemented.");
+    }
+  };
+  
+  
   return (
     <BrowserRouter>
       <ConfigProvider>
@@ -76,6 +102,7 @@ const App: React.FC = () => {
             dataProvider={dataProvider}
             authProvider={authProvider}
             i18nProvider={i18nProvider}
+            auditLogProvider={auditLogProvider}
             options={{
               syncWithLocation: true,
               warnWhenUnsavedChanges: true,
